@@ -39,7 +39,7 @@
         }
 
         .stat-badge {
-            background: rgba(255, 255, 255, 0.05); padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.05); padding: 4px 8px;
             border-radius: 5px; font-size: 10px; margin-top: 10px; display: inline-block;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -51,14 +51,11 @@
             transition: 0.3s; margin-bottom: 10px;
         }
 
-        .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
-
         .btn-print {
             background: transparent; border: 1px solid var(--gold-glow);
             color: var(--gold-glow); padding: 10px; width: 100%; border-radius: 8px;
-            font-weight: bold; cursor: pointer; transition: 0.3s;
+            font-weight: bold; cursor: pointer;
         }
-        .btn-print:hover { background: var(--gold-glow); color: black; }
 
         .controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
         
@@ -69,7 +66,8 @@
 
         .btn-math {
             background: transparent; border: none; color: white; 
-            width: 30px; height: 30px; cursor: pointer; font-size: 16px;
+            width: 25px; height: 25px; cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .btn-small { 
@@ -78,54 +76,71 @@
             text-transform: uppercase; font-weight: bold;
         }
         
-        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
-        .cpf-tag { color: #666; font-family: monospace; font-size: 12px; }
+        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; }
+        .cpf-tag { color: #666; font-family: monospace; font-size: 11px; }
+
+        /* TABELA DE IMPRESSÃO (ESCONDIDA NO DASHBOARD) */
+        #print-table-container { display: none; }
 
         @media print {
-            .master-container { grid-template-columns: 1fr; padding: 0; }
-            aside, .controls, .btn-math, .btn-action, .btn-print { display: none !important; }
             body { background: white !important; color: black !important; }
-            .user-node { border: 1px solid #000 !important; background: white !important; page-break-inside: avoid; }
-            .security-card { box-shadow: none !important; border: 2px solid #000 !important; }
-            .reward-points, #stats-display { color: black !important; text-shadow: none !important; }
+            .master-container, aside, .security-card, .controls, .btn-math { display: none !important; }
+            
+            #print-table-container { 
+                display: block !important; 
+                padding: 20px;
+            }
+            
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+            th { background-color: #f2f2f2; }
+            .header-print { text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; }
         }
     </style>
 </head>
 <body>
 
+<!-- ESTRUTURA PARA IMPRESSÃO EM LISTA (A4) -->
+<div id="print-table-container">
+    <div class="header-print">
+        <h2>ELDIN I.A. ERP - RELATÓRIO DE ENTREGAS (KPI)</h2>
+        <p id="print-date"></p>
+        <h3 id="print-total-global"></h3>
+    </div>
+    <table id="table-data">
+        <thead>
+            <tr>
+                <th>COLABORADOR</th>
+                <th>IDENTIFICAÇÃO (CPF)</th>
+                <th>VALOR A RECEBER</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
 <div class="master-container">
     <aside class="security-card">
         <h1>ELDIN I.A.</h1>
-        <div style="font-size: 11px; color: var(--gold-glow); margin-bottom: 25px; letter-spacing: 1px;">SISTEMA DE PREMIAÇÃO</div>
+        <div style="font-size: 11px; color: var(--gold-glow); margin-bottom: 25px;">SISTEMA DE PREMIAÇÃO</div>
         
         <nav>
             <button class="btn-action" onclick="addUser()">+ NOVO COLABORADOR</button>
-            <button class="btn-print" onclick="window.print()">🖨️ GERAR RELATÓRIO A4</button>
-            
-            <div style="margin-top: 40px;">
-                <p style="font-size: 14px;"><strong>INDICADORES KPI</strong></p>
-                <div style="font-size: 11px; color: #888; line-height: 1.8;">
-                    ⭐ 10 Pontos = R$ 1,00<br>
-                    ❌ Falta = -R$ 50,00<br>
-                    🏥 Atestado = Sem penalidade<br>
-                    💯 100% Assiduidade = Bônus Extra
-                </div>
+            <button class="btn-print" onclick="window.print()">🖨️ RELATÓRIO EM LISTA (A4)</button>
+            <div style="margin-top: 40px; font-size: 11px; color: #888;">
+                ⭐ 10 Pontos = R$ 1,00 | ❌ Falta = -R$ 50,00
             </div>
         </nav>
     </aside>
 
     <main>
-        <div class="security-card" style="margin-bottom: 30px; position: relative;">
+        <div class="security-card" style="margin-bottom: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h2 style="margin:0; font-size: 14px; color: #888;">CUSTO DE PRODUTIVIDADE (GLOBAL)</h2>
+                    <h2 style="margin:0; font-size: 14px; color: #888;">CUSTO GLOBAL DE PRODUTIVIDADE</h2>
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="btn-math" onclick="adjustGlobal(10)" style="background:var(--glass); border-radius:50%;">+</button>
-                            <button class="btn-math" onclick="adjustGlobal(-10)" style="background:var(--glass); border-radius:50%;">-</button>
-                            <button class="btn-math" onclick="resetGlobal()" style="color:var(--danger); margin-left:10px;">🔄</button>
-                        </div>
+                        <button class="btn-math" onclick="resetGlobal()" style="color:var(--danger);">🔄</button>
                     </div>
                 </div>
                 <div style="text-align: right;">
@@ -140,40 +155,49 @@
 </div>
 
 <script>
-    let globalOffset = 0; 
     let colaboradores = [
-        { nome: "Cristian Ribeiro", cpf: "342.***.***-54", folgaFixa: "QUARTA", domingoMes: "2º Domingo", atestados: 5, faltas: 0, pontos: 1500 },
-        { nome: "Mikaele Nascimento", cpf: "040.***.***-02", folgaFixa: "SEXTA", domingoMes: "1º Domingo", atestados: 2, faltas: 2, pontos: 2800 }
+        { nome: "Cristian Ribeiro", cpf: "342.***.***-54", folgaFixa: "QUARTA", domingoMes: "2º Domingo", atestados: 0, faltas: 0, pontos: 1500 },
+        { nome: "Mikaele Nascimento", cpf: "040.***.***-02", folgaFixa: "SEXTA", domingoMes: "1º Domingo", atestados: 0, faltas: 0, pontos: 2800 }
     ];
 
     function renderSystem() {
         const container = document.getElementById('node-container');
+        const tableBody = document.getElementById('table-body');
         let totalBônusSomado = 0;
         let somaPontualidade = 0;
 
-        container.innerHTML = colaboradores.map((c, index) => {
+        // Limpar visual e tabela de impressão
+        container.innerHTML = "";
+        tableBody.innerHTML = "";
+
+        colaboradores.forEach((c, index) => {
             const valorBase = c.pontos / 10;
             const penalidadeFaltas = c.faltas * 50;
             const bônusCalculado = Math.max(0, valorBase - penalidadeFaltas);
-            
             const assiduidade = Math.max(0, 100 - (c.faltas * 15));
+            
             somaPontualidade += assiduidade;
             totalBônusSomado += bônusCalculado;
 
-            return `
+            // Renderiza Dashboard
+            container.innerHTML += `
             <div class="user-node">
-                <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <strong style="color:var(--gold-glow); font-size: 16px;">${c.nome.toUpperCase()}</strong><br>
+                        <strong style="color:var(--gold-glow); font-size: 15px;">${c.nome.toUpperCase()}</strong><br>
                         <span class="cpf-tag">${c.cpf}</span>
                     </div>
-                    <div class="reward-points">R$ ${bônusCalculado.toFixed(2)}</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button class="btn-math" onclick="adjustValue(${index}, -10)" style="background:#333; border-radius:4px;">-</button>
+                        <div class="reward-points">R$ ${bônusCalculado.toFixed(2)}</div>
+                        <button class="btn-math" onclick="adjustValue(${index}, 10)" style="background:#333; border-radius:4px;">+</button>
+                    </div>
                 </div>
 
-                <div style="margin: 15px 0;">
-                    <div style="font-size: 10px; color: #888; margin-bottom: 5px;">ASSIDUIDADE: ${assiduidade}%</div>
-                    <div style="width: 100%; height: 4px; background: #333; border-radius: 2px;">
-                        <div style="width: ${assiduidade}%; height: 100%; background: ${assiduidade > 80 ? 'var(--success)' : 'var(--golden-orange)'}; box-shadow: 0 0 10px ${assiduidade > 80 ? '#00FF7F' : '#FF8C00'};"></div>
+                <div style="margin: 12px 0;">
+                    <div style="font-size: 9px; color: #888; margin-bottom: 4px;">ASSIDUIDADE: ${assiduidade}%</div>
+                    <div style="width: 100%; height: 3px; background: #333; border-radius: 2px;">
+                        <div style="width: ${assiduidade}%; height: 100%; background: var(--success); box-shadow: 0 0 10px var(--success);"></div>
                     </div>
                 </div>
 
@@ -182,38 +206,53 @@
                     <div class="stat-badge">DOMINGO: ${c.domingoMes}</div>
                 </div>
                 
-                <div style="margin-top:20px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="margin-top:15px; font-size: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div class="counter-group">
                         <button class="btn-math" onclick="adjustStat(${index}, 'atestados', -1)">-</button>
-                        <span style="flex:1; text-align:center;">🏥 Atestados: <strong>${c.atestados}</strong></span>
+                        <span style="flex:1; text-align:center;">🏥 ${c.atestados}</span>
                         <button class="btn-math" onclick="adjustStat(${index}, 'atestados', 1)">+</button>
                     </div>
                     <div class="counter-group">
                         <button class="btn-math" onclick="adjustStat(${index}, 'faltas', -1)">-</button>
-                        <span style="flex:1; text-align:center;">❌ Faltas: <strong>${c.faltas}</strong></span>
+                        <span style="flex:1; text-align:center;">❌ ${c.faltas}</span>
                         <button class="btn-math" onclick="adjustStat(${index}, 'faltas', 1)">+</button>
                     </div>
                 </div>
 
                 <div class="controls">
                     <button class="btn-small" style="grid-column: span 2; border-color: var(--success); color: var(--success);" onclick="addKpi(${index})">⭐ CREDITAR ENTREGA</button>
-                    <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
-                    <button class="btn-small" onclick="changeDomingo(${index})">Trocar Domingo</button>
-                    <button class="btn-small" style="grid-column: span 2; border-color: var(--danger); color: var(--danger); margin-top: 5px;" onclick="removeUser(${index})">REMOVER COLABORADOR</button>
+                    <button class="btn-small" onclick="changeFolga(${index})">Folga</button>
+                    <button class="btn-small" onclick="changeDomingo(${index})">Domingo</button>
+                    <button class="btn-small" style="grid-column: span 2; color: var(--danger);" onclick="removeUser(${index})">REMOVER</button>
                 </div>
-            </div>
-            `;
-        }).join('');
+            </div>`;
 
-        document.getElementById('stats-display').innerText = `R$ ${(totalBônusSomado + globalOffset).toFixed(2)}`;
-        document.getElementById('media-kpi').innerText = `${(somaPontualidade / colaboradores.length).toFixed(0)}%`;
+            // Alimenta Tabela de Impressão (Apenas Nome e Valor)
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${c.nome.toUpperCase()}</td>
+                    <td>${c.cpf}</td>
+                    <td><strong>R$ ${bônusCalculado.toFixed(2)}</strong></td>
+                </tr>
+            `;
+        });
+
+        const totalFinal = totalBônusSomado.toFixed(2);
+        document.getElementById('stats-display').innerText = `R$ ${totalFinal}`;
+        document.getElementById('print-total-global').innerText = `TOTAL DA FOLHA: R$ ${totalFinal}`;
+        document.getElementById('media-kpi').innerText = `${(somaPontualidade / (colaboradores.length || 1)).toFixed(0)}%`;
+        document.getElementById('print-date').innerText = `Gerado em: ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}`;
     }
 
-    function adjustGlobal(val) { globalOffset += val; renderSystem(); }
-    function resetGlobal() { globalOffset = 0; renderSystem(); }
+    function adjustValue(index, amount) {
+        colaboradores[index].pontos = Math.max(0, colaboradores[index].pontos + amount);
+        renderSystem();
+    }
+
+    function resetGlobal() { if(confirm("Zerar todos os pontos?")) { colaboradores.forEach(c => c.pontos = 0); renderSystem(); }}
 
     function addKpi(index) {
-        const pts = prompt("Pontos de performance:", "100");
+        const pts = prompt("Adicionar quantos pontos?", "100");
         if(pts && !isNaN(pts)) { colaboradores[index].pontos += parseInt(pts); renderSystem(); }
     }
 
@@ -232,17 +271,17 @@
     }
 
     function removeUser(index) {
-        if(confirm(`Excluir ${colaboradores[index].nome}?`)) { colaboradores.splice(index, 1); renderSystem(); }
+        if(confirm(`Remover ${colaboradores[index].nome}?`)) { colaboradores.splice(index, 1); renderSystem(); }
     }
 
     function changeFolga(index) {
-        const nova = prompt("Nova Folga Fixa:", colaboradores[index].folgaFixa);
-        if(nova) { colaboradores[index].folgaFixa = nova.toUpperCase(); renderSystem(); }
+        const n = prompt("Nova Folga:", colaboradores[index].folgaFixa);
+        if(n) { colaboradores[index].folgaFixa = n.toUpperCase(); renderSystem(); }
     }
 
     function changeDomingo(index) {
-        const novo = prompt("Qual o Domingo do mês?", colaboradores[index].domingoMes);
-        if(novo) { colaboradores[index].domingoMes = novo; renderSystem(); }
+        const n = prompt("Novo Domingo:", colaboradores[index].domingoMes);
+        if(n) { colaboradores[index].domingoMes = n; renderSystem(); }
     }
 
     renderSystem();
