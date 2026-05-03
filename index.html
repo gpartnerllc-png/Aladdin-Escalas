@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>ELDIN I.A ERP | Advanced AI Command</title>
+    <title>ELDIN I.A ERP | Scale & Performance</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-filled/48/FFD700/security-configuration.png">
     <style>
         :root {
@@ -12,135 +12,168 @@
             --gold-glow: #FFD700;
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 215, 0, 0.2);
+            --danger: #ff4d4d;
         }
 
         body {
             background: radial-gradient(circle at top, var(--deep-blue), var(--platinum-black));
             color: #E0E0E0; font-family: 'Inter', sans-serif;
-            margin: 0; overflow-x: hidden; min-height: 100vh;
+            margin: 0; min-height: 100vh;
         }
 
-        /* Efeito 3D de Camada Superior */
-        .master-container {
-            perspective: 1000px; padding: 40px;
-            display: grid; grid-template-columns: 300px 1fr; gap: 30px;
-        }
+        .master-container { padding: 40px; display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
 
-        /* Card de Segurança Aladin */
         .security-card {
-            background: var(--glass);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--border);
-            border-radius: 25px; padding: 25px;
-            transform: rotateY(5deg);
+            background: var(--glass); backdrop-filter: blur(30px);
+            border: 1px solid var(--border); border-radius: 25px; padding: 25px;
             box-shadow: -15px 15px 30px rgba(0,0,0,0.5);
-            transition: 0.5s ease;
-        }
-        
-        .security-card:hover { transform: rotateY(0deg) scale(1.02); }
-
-        .ai-pulse {
-            width: 15px; height: 15px; background: var(--gold-glow);
-            border-radius: 50%; box-shadow: 0 0 20px var(--golden-orange);
-            animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        /* Lista de Colaboradores por CPF */
-        .user-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-        }
+        .user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
 
         .user-node {
             background: linear-gradient(145deg, #0a0a0a, #151515);
             border-left: 5px solid var(--golden-orange);
-            padding: 20px; border-radius: 12px;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; border-radius: 12px; position: relative;
         }
 
-        .cpf-tag { font-family: monospace; color: var(--gold-glow); font-size: 12px; }
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.05); padding: 5px 10px;
+            border-radius: 5px; font-size: 11px; margin-top: 10px; display: inline-block;
+        }
 
         .btn-action {
             background: linear-gradient(to right, var(--golden-orange), var(--gold-glow));
-            border: none; padding: 12px 25px; border-radius: 8px;
-            color: black; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
+            border: none; padding: 10px 20px; border-radius: 8px;
+            color: black; font-weight: 900; cursor: pointer; width: 100%;
         }
 
-        h1 { color: var(--gold-glow); text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+        .controls { display: flex; gap: 5px; margin-top: 15px; }
+        .btn-small { background: #222; border: 1px solid #444; color: #ccc; padding: 5px; font-size: 10px; cursor: pointer; border-radius: 4px; }
+        .btn-small:hover { border-color: var(--gold-glow); }
+        
+        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="master-container">
-    <!-- Sidebar de Gestão ERP -->
     <aside class="security-card">
         <h1>ELDIN I.A.</h1>
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px;">
-            <div class="ai-pulse"></div>
-            <span style="font-size: 12px; font-weight: bold; letter-spacing: 2px;">NÚCLEO ATIVO</span>
-        </div>
+        <div style="font-size: 12px; color: var(--gold-glow); margin-bottom: 20px;">NÚCLEO DE ESCALA ATIVO</div>
         
         <nav>
-            <p><strong>GERENCIAR UNIDADES</strong></p>
-            <div style="font-size: 13px; color: #888;">Empresa: Partner Holding</div>
-            <div style="font-size: 13px; color: #888;">Projeto: X-Partner</div>
-            <hr style="border: 0.5px solid #222; margin: 20px 0;">
-            <button class="btn-action" onclick="addUser()">+ CADASTRAR CPF</button>
+            <button class="btn-action" onclick="addUser()">+ NOVO COLABORADOR</button>
+            <div style="margin-top: 30px;">
+                <p><strong>REGRAS DE ESCALA</strong></p>
+                <ul style="font-size: 11px; color: #888; padding-left: 15px;">
+                    <li>Folga Fixa Semanal</li>
+                    <li>1 Domingo p/ Mês (Rodízio)</li>
+                    <li>Contagem Semestral de Atestados</li>
+                </ul>
+            </div>
         </nav>
     </aside>
 
-    <!-- Área de Performance em Escala -->
     <main>
-        <div class="security-card" style="margin-bottom: 30px; transform: none;">
-            <h2>MÉTRICAS DE ENTREGA (KPI)</h2>
-            <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">
-                R$ 0,00
+        <div class="security-card" style="margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>PERFORMANCE GLOBAL</h2>
+                    <div id="stats-display" style="font-size: 42px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 12px;">METAS ALCANÇADAS</div>
+                    <div class="reward-points">88%</div>
+                </div>
             </div>
-            <p style="font-size: 12px; color: #555;">SISTEMA DE PAGAMENTO POR ENTREGA ATIVADO</p>
         </div>
 
-        <div class="user-grid" id="node-container">
-            <!-- Usuários serão inseridos aqui via script -->
-        </div>
+        <div class="user-grid" id="node-container"></div>
     </main>
 </div>
 
 <script>
-    // Banco de Dados em Memória (Integrado ao Aladin I.A.)
     let colaboradores = [
-        { nome: "Cristian Ribeiro", cpf: "342.***.***-54", status: "Estrategista" },
-        { nome: "Mikaele Nascimento", cpf: "040.***.***-02", status: "Operacional" }
+        { 
+            nome: "Cristian Ribeiro", 
+            cpf: "342.***.***-54", 
+            folgaFixa: "Segunda", 
+            domingoMes: "2º Domingo",
+            atestados: 1,
+            faltas: 0,
+            pontos: 1500
+        },
+        { 
+            nome: "Mikaele Nascimento", 
+            cpf: "040.***.***-02", 
+            folgaFixa: "Quarta", 
+            domingoMes: "1º Domingo",
+            atestados: 0,
+            faltas: 1,
+            pontos: 2800
+        }
     ];
 
     function renderSystem() {
         const container = document.getElementById('node-container');
         container.innerHTML = colaboradores.map((c, index) => `
             <div class="user-node">
-                <div>
-                    <div style="font-weight: bold;">${c.nome.toUpperCase()}</div>
-                    <div class="cpf-tag">ID: ${c.cpf}</div>
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <strong style="color:var(--gold-glow)">${c.nome.toUpperCase()}</strong><br>
+                        <span class="cpf-tag">${c.cpf}</span>
+                    </div>
+                    <div class="reward-points">R$ ${(c.pontos/10).toFixed(2)}</div>
                 </div>
-                <button onclick="removeUser(${index})" style="background:none; border:1px solid #444; color:#666; cursor:pointer; border-radius:4px;">REMOVER</button>
+
+                <div class="stat-badge">FOLGA: ${c.folgaFixa}</div>
+                <div class="stat-badge">DOMINGO: ${c.domingoMes}</div>
+                
+                <div style="margin-top:15px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <span>🏥 Atestados (6m): <strong>${c.atestados}</strong></span>
+                    <span>❌ Faltas: <strong>${c.faltas}</strong></span>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-small" onclick="updateStat(${index}, 'atestados')">+ Atestado</button>
+                    <button class="btn-small" onclick="updateStat(${index}, 'faltas')">+ Falta</button>
+                    <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
+                    <button class="btn-small" style="color:var(--danger)" onclick="removeUser(${index})">Remover</button>
+                </div>
             </div>
         `).join('');
+    }
+
+    function updateStat(index, field) {
+        colaboradores[index][field]++;
+        renderSystem();
+    }
+
+    function changeFolga(index) {
+        const nova = prompt("Nova folga fixa (Ex: Terça):");
+        if(nova) {
+            colaboradores[index].folgaFixa = nova;
+            renderSystem();
+        }
     }
 
     function addUser() {
         const nome = prompt("Nome Completo:");
         const cpf = prompt("CPF:");
         if(nome && cpf) {
-            colaboradores.push({ nome, cpf, status: "Novo Ativo" });
+            colaboradores.push({ 
+                nome, cpf, 
+                folgaFixa: "A definir", 
+                domingoMes: "A definir",
+                atestados: 0, faltas: 0, pontos: 0 
+            });
             renderSystem();
         }
     }
 
     function removeUser(index) {
-        if(confirm("Deseja desconectar este nó do sistema?")) {
+        if(confirm("Remover colaborador da escala?")) {
             colaboradores.splice(index, 1);
             renderSystem();
         }
