@@ -140,7 +140,7 @@
 </div>
 
 <script>
-    let globalOffset = 0; // Para ajuste manual do custo global
+    let globalOffset = 0; 
     let colaboradores = [
         { nome: "Cristian Ribeiro", cpf: "342.***.***-54", folgaFixa: "QUARTA", domingoMes: "2º Domingo", atestados: 5, faltas: 0, pontos: 1500 },
         { nome: "Mikaele Nascimento", cpf: "040.***.***-02", folgaFixa: "SEXTA", domingoMes: "1º Domingo", atestados: 2, faltas: 2, pontos: 2800 }
@@ -156,7 +156,6 @@
             const penalidadeFaltas = c.faltas * 50;
             const bônusCalculado = Math.max(0, valorBase - penalidadeFaltas);
             
-            // Lógica de % de Assiduidade: Considera 22 dias úteis como base
             const assiduidade = Math.max(0, 100 - (c.faltas * 15));
             somaPontualidade += assiduidade;
             totalBônusSomado += bônusCalculado;
@@ -199,7 +198,8 @@
                 <div class="controls">
                     <button class="btn-small" style="grid-column: span 2; border-color: var(--success); color: var(--success);" onclick="addKpi(${index})">⭐ CREDITAR ENTREGA</button>
                     <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
-                    <button class="btn-small" style="border-color: var(--danger); color: var(--danger);" onclick="removeUser(${index})">REMOVER</button>
+                    <button class="btn-small" onclick="changeDomingo(${index})">Trocar Domingo</button>
+                    <button class="btn-small" style="grid-column: span 2; border-color: var(--danger); color: var(--danger); margin-top: 5px;" onclick="removeUser(${index})">REMOVER COLABORADOR</button>
                 </div>
             </div>
             `;
@@ -236,8 +236,13 @@
     }
 
     function changeFolga(index) {
-        const nova = prompt("Nova Folga:", colaboradores[index].folgaFixa);
+        const nova = prompt("Nova Folga Fixa:", colaboradores[index].folgaFixa);
         if(nova) { colaboradores[index].folgaFixa = nova.toUpperCase(); renderSystem(); }
+    }
+
+    function changeDomingo(index) {
+        const novo = prompt("Qual o Domingo do mês?", colaboradores[index].domingoMes);
+        if(novo) { colaboradores[index].domingoMes = novo; renderSystem(); }
     }
 
     renderSystem();
