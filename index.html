@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>ELDIN I.A ERP | Ultimate Scale Control</title>
+    <title>ELDIN I.A ERP | Master Dashboard</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-filled/48/FFD700/security-configuration.png">
     <style>
         :root {
@@ -48,10 +48,17 @@
             background: linear-gradient(to right, var(--golden-orange), var(--gold-glow));
             border: none; padding: 12px 20px; border-radius: 8px;
             color: black; font-weight: 900; cursor: pointer; width: 100%;
-            transition: 0.3s;
+            transition: 0.3s; margin-bottom: 10px;
         }
 
         .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        .btn-print {
+            background: transparent; border: 1px solid var(--gold-glow);
+            color: var(--gold-glow); padding: 10px; width: 100%; border-radius: 8px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-print:hover { background: var(--gold-glow); color: black; }
 
         .controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
         
@@ -65,18 +72,23 @@
             width: 30px; height: 30px; cursor: pointer; font-size: 16px;
         }
 
-        .btn-math:hover { color: var(--gold-glow); }
-
         .btn-small { 
             background: #222; border: 1px solid #444; color: #ccc; 
             padding: 8px; font-size: 10px; cursor: pointer; border-radius: 6px; 
             text-transform: uppercase; font-weight: bold;
         }
         
-        .btn-small:hover { border-color: var(--gold-glow); background: #333; }
-        
-        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; }
+        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
         .cpf-tag { color: #666; font-family: monospace; font-size: 12px; }
+
+        @media print {
+            .master-container { grid-template-columns: 1fr; padding: 0; }
+            aside, .controls, .btn-math, .btn-action, .btn-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .user-node { border: 1px solid #000 !important; background: white !important; page-break-inside: avoid; }
+            .security-card { box-shadow: none !important; border: 2px solid #000 !important; }
+            .reward-points, #stats-display { color: black !important; text-shadow: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -84,33 +96,41 @@
 <div class="master-container">
     <aside class="security-card">
         <h1>ELDIN I.A.</h1>
-        <div style="font-size: 11px; color: var(--gold-glow); margin-bottom: 25px; letter-spacing: 1px;">NÚCLEO DE ESCALA ATIVO</div>
+        <div style="font-size: 11px; color: var(--gold-glow); margin-bottom: 25px; letter-spacing: 1px;">SISTEMA DE PREMIAÇÃO</div>
         
         <nav>
             <button class="btn-action" onclick="addUser()">+ NOVO COLABORADOR</button>
+            <button class="btn-print" onclick="window.print()">🖨️ GERAR RELATÓRIO A4</button>
+            
             <div style="margin-top: 40px;">
-                <p style="font-size: 14px; letter-spacing: 1px;"><strong>REGRAS DE ESCALA</strong></p>
-                <ul style="font-size: 11px; color: #888; padding-left: 15px; line-height: 1.8;">
-                    <li>Folga Fixa Semanal</li>
-                    <li>Rodízio: 1 Domingo p/ Mês</li>
-                    <li>Janela Semestral de Atestados</li>
-                    <li>Cálculo Automático de Bônus (KPI)</li>
-                </ul>
+                <p style="font-size: 14px;"><strong>INDICADORES KPI</strong></p>
+                <div style="font-size: 11px; color: #888; line-height: 1.8;">
+                    ⭐ 10 Pontos = R$ 1,00<br>
+                    ❌ Falta = -R$ 50,00<br>
+                    🏥 Atestado = Sem penalidade<br>
+                    💯 100% Assiduidade = Bônus Extra
+                </div>
             </div>
         </nav>
     </aside>
 
     <main>
-        <!-- Dashboard de Performance Global Baseado em Entregas -->
-        <div class="security-card" style="margin-bottom: 30px;">
+        <div class="security-card" style="margin-bottom: 30px; position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h2 style="margin:0; font-size: 14px; color: #888;">CUSTO DE PRODUTIVIDADE (GLOBAL)</h2>
-                    <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-math" onclick="adjustGlobal(10)" style="background:var(--glass); border-radius:50%;">+</button>
+                            <button class="btn-math" onclick="adjustGlobal(-10)" style="background:var(--glass); border-radius:50%;">-</button>
+                            <button class="btn-math" onclick="resetGlobal()" style="color:var(--danger); margin-left:10px;">🔄</button>
+                        </div>
+                    </div>
                 </div>
                 <div style="text-align: right;">
-                    <div style="font-size: 12px; color: #666;">METAS ATINGIDAS</div>
-                    <div class="reward-points" style="font-size: 32px;">88%</div>
+                    <div style="font-size: 12px; color: #666;">PONTUALIDADE MÉDIA</div>
+                    <div id="media-kpi" class="reward-points" style="font-size: 32px;">0%</div>
                 </div>
             </div>
         </div>
@@ -120,50 +140,42 @@
 </div>
 
 <script>
-    // Inicialização de Dados com os colaboradores base (Cristian e Mikaele)
+    let globalOffset = 0; // Para ajuste manual do custo global
     let colaboradores = [
-        { 
-            nome: "Cristian Ribeiro", 
-            cpf: "342.***.***-54", 
-            folgaFixa: "QUARTA", 
-            domingoMes: "2º Domingo",
-            atestados: 5,
-            faltas: 0,
-            pontos: 1500
-        },
-        { 
-            nome: "Mikaele Nascimento", 
-            cpf: "040.***.***-02", 
-            folgaFixa: "SEXTA", 
-            domingoMes: "1º Domingo",
-            atestados: 2,
-            faltas: 2,
-            pontos: 2800
-        }
+        { nome: "Cristian Ribeiro", cpf: "342.***.***-54", folgaFixa: "QUARTA", domingoMes: "2º Domingo", atestados: 5, faltas: 0, pontos: 1500 },
+        { nome: "Mikaele Nascimento", cpf: "040.***.***-02", folgaFixa: "SEXTA", domingoMes: "1º Domingo", atestados: 2, faltas: 2, pontos: 2800 }
     ];
 
     function renderSystem() {
         const container = document.getElementById('node-container');
-        let totalGlobalRemuneracao = 0;
+        let totalBônusSomado = 0;
+        let somaPontualidade = 0;
 
         container.innerHTML = colaboradores.map((c, index) => {
-            // Lógica de Negócio: Transição para controle por entrega
-            // Cada 10 pontos = R$ 1,00. Faltas penalizam o bônus de performance.
-            const valorBaseTask = c.pontos / 10;
-            const penalidadeFaltas = c.faltas * 50; 
-            const bônusFinal = Math.max(0, valorBaseTask - penalidadeFaltas);
+            const valorBase = c.pontos / 10;
+            const penalidadeFaltas = c.faltas * 50;
+            const bônusCalculado = Math.max(0, valorBase - penalidadeFaltas);
             
-            totalGlobalRemuneracao += bônusFinal;
+            // Lógica de % de Assiduidade: Considera 22 dias úteis como base
+            const assiduidade = Math.max(0, 100 - (c.faltas * 15));
+            somaPontualidade += assiduidade;
+            totalBônusSomado += bônusCalculado;
 
             return `
             <div class="user-node">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; justify-content: space-between;">
                     <div>
                         <strong style="color:var(--gold-glow); font-size: 16px;">${c.nome.toUpperCase()}</strong><br>
                         <span class="cpf-tag">${c.cpf}</span>
                     </div>
-                    <!-- Premiação Individual baseada em entregas (KPIs) -->
-                    <div class="reward-points">R$ ${bônusFinal.toFixed(2)}</div>
+                    <div class="reward-points">R$ ${bônusCalculado.toFixed(2)}</div>
+                </div>
+
+                <div style="margin: 15px 0;">
+                    <div style="font-size: 10px; color: #888; margin-bottom: 5px;">ASSIDUIDADE: ${assiduidade}%</div>
+                    <div style="width: 100%; height: 4px; background: #333; border-radius: 2px;">
+                        <div style="width: ${assiduidade}%; height: 100%; background: ${assiduidade > 80 ? 'var(--success)' : 'var(--golden-orange)'}; box-shadow: 0 0 10px ${assiduidade > 80 ? '#00FF7F' : '#FF8C00'};"></div>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 8px;">
@@ -185,30 +197,24 @@
                 </div>
 
                 <div class="controls">
-                    <!-- Sistema de Crédito de Entrega para o SandxCDD -->
-                    <button class="btn-small" style="grid-column: span 2; border-color: var(--success); color: var(--success);" 
-                        onclick="addKpi(${index})">⭐ REGISTRAR ENTREGA (KPI)</button>
-                    
+                    <button class="btn-small" style="grid-column: span 2; border-color: var(--success); color: var(--success);" onclick="addKpi(${index})">⭐ CREDITAR ENTREGA</button>
                     <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
-                    <button class="btn-small" onclick="changeSunday(${index})">Trocar Domingo</button>
-                    
-                    <button class="btn-small" style="grid-column: span 2; border-color: var(--danger); color: var(--danger);" 
-                        onclick="removeUser(${index})">REMOVER COLABORADOR</button>
+                    <button class="btn-small" style="border-color: var(--danger); color: var(--danger);" onclick="removeUser(${index})">REMOVER</button>
                 </div>
             </div>
-        `}).join('');
+            `;
+        }).join('');
 
-        // Atualiza o monitoramento financeiro do ERP
-        document.getElementById('stats-display').innerText = `R$ ${totalGlobalRemuneracao.toFixed(2)}`;
+        document.getElementById('stats-display').innerText = `R$ ${(totalBônusSomado + globalOffset).toFixed(2)}`;
+        document.getElementById('media-kpi').innerText = `${(somaPontualidade / colaboradores.length).toFixed(0)}%`;
     }
 
-    // Função para adicionar pontos baseados em metas batidas
+    function adjustGlobal(val) { globalOffset += val; renderSystem(); }
+    function resetGlobal() { globalOffset = 0; renderSystem(); }
+
     function addKpi(index) {
-        const pontosTask = prompt(`Registrar pontos de performance para ${colaboradores[index].nome}:`, "100");
-        if(pontosTask && !isNaN(pontosTask)) {
-            colaboradores[index].pontos += parseInt(pontosTask);
-            renderSystem();
-        }
+        const pts = prompt("Pontos de performance:", "100");
+        if(pts && !isNaN(pts)) { colaboradores[index].pontos += parseInt(pts); renderSystem(); }
     }
 
     function adjustStat(index, field, value) {
@@ -216,44 +222,24 @@
         renderSystem();
     }
 
-    function changeFolga(index) {
-        const nova = prompt("Definir nova folga fixa:", colaboradores[index].folgaFixa);
-        if(nova) {
-            colaboradores[index].folgaFixa = nova.toUpperCase();
-            renderSystem();
-        }
-    }
-
-    function changeSunday(index) {
-        const domingos = ["1º Domingo", "2º Domingo", "3º Domingo", "4º Domingo"];
-        let atual = domingos.indexOf(colaboradores[index].domingoMes);
-        let proximo = (atual + 1) % domingos.length;
-        colaboradores[index].domingoMes = domingos[proximo];
-        renderSystem();
-    }
-
     function addUser() {
-        const nome = prompt("Nome do Colaborador:");
-        const cpf = prompt("CPF (para registro seguro):");
-        if(nome && cpf) {
-            colaboradores.push({ 
-                nome, cpf, 
-                folgaFixa: "A DEFINIR", 
-                domingoMes: "1º Domingo",
-                atestados: 0, faltas: 0, pontos: 0 
-            });
+        const n = prompt("Nome:");
+        const c = prompt("CPF:");
+        if(n && c) {
+            colaboradores.push({ nome: n, cpf: c, folgaFixa: "A DEFINIR", domingoMes: "1º Domingo", atestados: 0, faltas: 0, pontos: 0 });
             renderSystem();
         }
     }
 
     function removeUser(index) {
-        if(confirm(`Remover ${colaboradores[index].nome} do núcleo de escala?`)) {
-            colaboradores.splice(index, 1);
-            renderSystem();
-        }
+        if(confirm(`Excluir ${colaboradores[index].nome}?`)) { colaboradores.splice(index, 1); renderSystem(); }
     }
 
-    // Inicialização da interface
+    function changeFolga(index) {
+        const nova = prompt("Nova Folga:", colaboradores[index].folgaFixa);
+        if(nova) { colaboradores[index].folgaFixa = nova.toUpperCase(); renderSystem(); }
+    }
+
     renderSystem();
 </script>
 </body>
