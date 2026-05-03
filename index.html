@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>ELDIN I.A ERP | Scale & Performance</title>
+    <title>ELDIN I.A ERP | Ultimate Scale Control</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-filled/48/FFD700/security-configuration.png">
     <style>
         :root {
@@ -13,6 +13,7 @@
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 215, 0, 0.2);
             --danger: #ff4d4d;
+            --success: #00FF7F;
         }
 
         body {
@@ -29,7 +30,7 @@
             box-shadow: -15px 15px 30px rgba(0,0,0,0.5);
         }
 
-        .user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
 
         .user-node {
             background: linear-gradient(145deg, #0a0a0a, #151515);
@@ -39,20 +40,43 @@
 
         .stat-badge {
             background: rgba(255, 255, 255, 0.05); padding: 5px 10px;
-            border-radius: 5px; font-size: 11px; margin-top: 10px; display: inline-block;
+            border-radius: 5px; font-size: 10px; margin-top: 10px; display: inline-block;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .btn-action {
             background: linear-gradient(to right, var(--golden-orange), var(--gold-glow));
-            border: none; padding: 10px 20px; border-radius: 8px;
+            border: none; padding: 12px 20px; border-radius: 8px;
             color: black; font-weight: 900; cursor: pointer; width: 100%;
+            transition: 0.3s;
         }
 
-        .controls { display: flex; gap: 5px; margin-top: 15px; }
-        .btn-small { background: #222; border: 1px solid #444; color: #ccc; padding: 5px; font-size: 10px; cursor: pointer; border-radius: 4px; }
-        .btn-small:hover { border-color: var(--gold-glow); }
+        .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        .controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
         
-        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 18px; }
+        .counter-group {
+            display: flex; align-items: center; background: #222; 
+            border-radius: 6px; padding: 2px; border: 1px solid #333;
+        }
+
+        .btn-math {
+            background: transparent; border: none; color: white; 
+            width: 30px; height: 30px; cursor: pointer; font-size: 16px;
+        }
+
+        .btn-math:hover { color: var(--gold-glow); }
+
+        .btn-small { 
+            background: #222; border: 1px solid #444; color: #ccc; 
+            padding: 8px; font-size: 10px; cursor: pointer; border-radius: 6px; 
+            text-transform: uppercase; font-weight: bold;
+        }
+        
+        .btn-small:hover { border-color: var(--gold-glow); background: #333; }
+        
+        .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; }
+        .cpf-tag { color: #666; font-family: monospace; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -60,16 +84,17 @@
 <div class="master-container">
     <aside class="security-card">
         <h1>ELDIN I.A.</h1>
-        <div style="font-size: 12px; color: var(--gold-glow); margin-bottom: 20px;">NÚCLEO DE ESCALA ATIVO</div>
+        <div style="font-size: 11px; color: var(--gold-glow); margin-bottom: 25px; letter-spacing: 1px;">NÚCLEO DE ESCALA ATIVO</div>
         
         <nav>
             <button class="btn-action" onclick="addUser()">+ NOVO COLABORADOR</button>
-            <div style="margin-top: 30px;">
-                <p><strong>REGRAS DE ESCALA</strong></p>
-                <ul style="font-size: 11px; color: #888; padding-left: 15px;">
+            <div style="margin-top: 40px;">
+                <p style="font-size: 14px; letter-spacing: 1px;"><strong>REGRAS DE ESCALA</strong></p>
+                <ul style="font-size: 11px; color: #888; padding-left: 15px; line-height: 1.8;">
                     <li>Folga Fixa Semanal</li>
-                    <li>1 Domingo p/ Mês (Rodízio)</li>
-                    <li>Contagem Semestral de Atestados</li>
+                    <li>Rodízio: 1 Domingo p/ Mês</li>
+                    <li>Janela Semestral de Atestados</li>
+                    <li>Cálculo Automático de Bônus</li>
                 </ul>
             </div>
         </nav>
@@ -79,12 +104,12 @@
         <div class="security-card" style="margin-bottom: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h2>PERFORMANCE GLOBAL</h2>
-                    <div id="stats-display" style="font-size: 42px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
+                    <h2 style="margin:0; font-size: 14px; color: #888;">PERFORMANCE GLOBAL DO PROJETO</h2>
+                    <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
                 </div>
                 <div style="text-align: right;">
-                    <div style="font-size: 12px;">METAS ALCANÇADAS</div>
-                    <div class="reward-points">88%</div>
+                    <div style="font-size: 12px; color: #666;">METAS ATINGIDAS</div>
+                    <div class="reward-points" style="font-size: 32px;">88%</div>
                 </div>
             </div>
         </div>
@@ -98,19 +123,19 @@
         { 
             nome: "Cristian Ribeiro", 
             cpf: "342.***.***-54", 
-            folgaFixa: "Segunda", 
+            folgaFixa: "QUARTA", 
             domingoMes: "2º Domingo",
-            atestados: 1,
+            atestados: 5,
             faltas: 0,
             pontos: 1500
         },
         { 
             nome: "Mikaele Nascimento", 
             cpf: "040.***.***-02", 
-            folgaFixa: "Quarta", 
+            folgaFixa: "SEXTA", 
             domingoMes: "1º Domingo",
-            atestados: 0,
-            faltas: 1,
+            atestados: 2,
+            faltas: 2,
             pontos: 2800
         }
     ];
@@ -119,43 +144,60 @@
         const container = document.getElementById('node-container');
         container.innerHTML = colaboradores.map((c, index) => `
             <div class="user-node">
-                <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <strong style="color:var(--gold-glow)">${c.nome.toUpperCase()}</strong><br>
+                        <strong style="color:var(--gold-glow); font-size: 16px;">${c.nome.toUpperCase()}</strong><br>
                         <span class="cpf-tag">${c.cpf}</span>
                     </div>
                     <div class="reward-points">R$ ${(c.pontos/10).toFixed(2)}</div>
                 </div>
 
-                <div class="stat-badge">FOLGA: ${c.folgaFixa}</div>
-                <div class="stat-badge">DOMINGO: ${c.domingoMes}</div>
+                <div style="display: flex; gap: 8px;">
+                    <div class="stat-badge">FOLGA: ${c.folgaFixa}</div>
+                    <div class="stat-badge">DOMINGO: ${c.domingoMes}</div>
+                </div>
                 
-                <div style="margin-top:15px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <span>🏥 Atestados (6m): <strong>${c.atestados}</strong></span>
-                    <span>❌ Faltas: <strong>${c.faltas}</strong></span>
+                <div style="margin-top:20px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="counter-group">
+                        <button class="btn-math" onclick="adjustStat(${index}, 'atestados', -1)">-</button>
+                        <span style="flex:1; text-align:center;">🏥 Atestados: <strong>${c.atestados}</strong></span>
+                        <button class="btn-math" onclick="adjustStat(${index}, 'atestados', 1)">+</button>
+                    </div>
+                    <div class="counter-group">
+                        <button class="btn-math" onclick="adjustStat(${index}, 'faltas', -1)">-</button>
+                        <span style="flex:1; text-align:center;">❌ Faltas: <strong>${c.faltas}</strong></span>
+                        <button class="btn-math" onclick="adjustStat(${index}, 'faltas', 1)">+</button>
+                    </div>
                 </div>
 
                 <div class="controls">
-                    <button class="btn-small" onclick="updateStat(${index}, 'atestados')">+ Atestado</button>
-                    <button class="btn-small" onclick="updateStat(${index}, 'faltas')">+ Falta</button>
                     <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
-                    <button class="btn-small" style="color:var(--danger)" onclick="removeUser(${index})">Remover</button>
+                    <button class="btn-small" onclick="changeSunday(${index})">Trocar Domingo</button>
+                    <button class="btn-small" style="grid-column: span 2; border-color: var(--danger); color: var(--danger);" onclick="removeUser(${index})">REMOVER COLABORADOR</button>
                 </div>
             </div>
         `).join('');
     }
 
-    function updateStat(index, field) {
-        colaboradores[index][field]++;
+    function adjustStat(index, field, value) {
+        colaboradores[index][field] = Math.max(0, colaboradores[index][field] + value);
         renderSystem();
     }
 
     function changeFolga(index) {
-        const nova = prompt("Nova folga fixa (Ex: Terça):");
+        const nova = prompt("Nova folga fixa semanal:", colaboradores[index].folgaFixa);
         if(nova) {
-            colaboradores[index].folgaFixa = nova;
+            colaboradores[index].folgaFixa = nova.toUpperCase();
             renderSystem();
         }
+    }
+
+    function changeSunday(index) {
+        const domingos = ["1º Domingo", "2º Domingo", "3º Domingo", "4º Domingo"];
+        let atual = domingos.indexOf(colaboradores[index].domingoMes);
+        let proximo = (atual + 1) % domingos.length;
+        colaboradores[index].domingoMes = domingos[proximo];
+        renderSystem();
     }
 
     function addUser() {
@@ -164,8 +206,8 @@
         if(nome && cpf) {
             colaboradores.push({ 
                 nome, cpf, 
-                folgaFixa: "A definir", 
-                domingoMes: "A definir",
+                folgaFixa: "A DEFINIR", 
+                domingoMes: "1º Domingo",
                 atestados: 0, faltas: 0, pontos: 0 
             });
             renderSystem();
@@ -173,7 +215,7 @@
     }
 
     function removeUser(index) {
-        if(confirm("Remover colaborador da escala?")) {
+        if(confirm(`Confirmar exclusão de ${colaboradores[index].nome} do sistema?`)) {
             colaboradores.splice(index, 1);
             renderSystem();
         }
