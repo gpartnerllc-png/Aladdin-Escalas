@@ -39,7 +39,7 @@
         }
 
         .stat-badge {
-            background: rgba(255, 255, 255, 0.05); padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.05); padding: 5px 10px;
             border-radius: 5px; font-size: 10px; margin-top: 10px; display: inline-block;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -54,7 +54,7 @@
         .btn-print {
             background: transparent; border: 1px solid var(--gold-glow);
             color: var(--gold-glow); padding: 10px; width: 100%; border-radius: 8px;
-            font-weight: bold; cursor: pointer;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
         }
 
         .controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 15px; }
@@ -66,7 +66,7 @@
 
         .btn-math {
             background: transparent; border: none; color: white; 
-            width: 25px; height: 25px; cursor: pointer; font-size: 16px;
+            width: 30px; height: 30px; cursor: pointer; font-size: 16px;
             display: flex; align-items: center; justify-content: center;
         }
 
@@ -77,33 +77,26 @@
         }
         
         .reward-points { color: var(--gold-glow); font-weight: bold; font-size: 20px; }
-        .cpf-tag { color: #666; font-family: monospace; font-size: 11px; }
+        .cpf-tag { color: #666; font-family: monospace; font-size: 12px; }
 
-        /* TABELA DE IMPRESSÃO (ESCONDIDA NO DASHBOARD) */
+        /* TABELA DE IMPRESSÃO */
         #print-table-container { display: none; }
 
         @media print {
             body { background: white !important; color: black !important; }
             .master-container, aside, .security-card, .controls, .btn-math { display: none !important; }
-            
-            #print-table-container { 
-                display: block !important; 
-                padding: 20px;
-            }
-            
+            #print-table-container { display: block !important; padding: 20px; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
-            th { background-color: #f2f2f2; }
-            .header-print { text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; }
+            th, td { border: 1px solid #000; padding: 10px; text-align: left; font-size: 12px; }
+            th { background-color: #eee; }
         }
     </style>
 </head>
 <body>
 
-<!-- ESTRUTURA PARA IMPRESSÃO EM LISTA (A4) -->
 <div id="print-table-container">
-    <div class="header-print">
-        <h2>ELDIN I.A. ERP - RELATÓRIO DE ENTREGAS (KPI)</h2>
+    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">
+        <h2>ELDIN I.A. ERP | PROJETO SANDXCDD</h2>
         <p id="print-date"></p>
         <h3 id="print-total-global"></h3>
     </div>
@@ -111,7 +104,7 @@
         <thead>
             <tr>
                 <th>COLABORADOR</th>
-                <th>IDENTIFICAÇÃO (CPF)</th>
+                <th>CPF</th>
                 <th>VALOR A RECEBER</th>
             </tr>
         </thead>
@@ -140,7 +133,7 @@
                     <h2 style="margin:0; font-size: 14px; color: #888;">CUSTO GLOBAL DE PRODUTIVIDADE</h2>
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">R$ 0,00</div>
-                        <button class="btn-math" onclick="resetGlobal()" style="color:var(--danger);">🔄</button>
+                        <button class="btn-math" onclick="resetGlobal()" style="color:var(--danger); border: 1px solid var(--danger); border-radius: 50%;">🔄</button>
                     </div>
                 </div>
                 <div style="text-align: right;">
@@ -166,7 +159,6 @@
         let totalBônusSomado = 0;
         let somaPontualidade = 0;
 
-        // Limpar visual e tabela de impressão
         container.innerHTML = "";
         tableBody.innerHTML = "";
 
@@ -179,12 +171,11 @@
             somaPontualidade += assiduidade;
             totalBônusSomado += bônusCalculado;
 
-            // Renderiza Dashboard
             container.innerHTML += `
             <div class="user-node">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <strong style="color:var(--gold-glow); font-size: 15px;">${c.nome.toUpperCase()}</strong><br>
+                        <strong style="color:var(--gold-glow); font-size: 16px;">${c.nome.toUpperCase()}</strong><br>
                         <span class="cpf-tag">${c.cpf}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -194,9 +185,9 @@
                     </div>
                 </div>
 
-                <div style="margin: 12px 0;">
-                    <div style="font-size: 9px; color: #888; margin-bottom: 4px;">ASSIDUIDADE: ${assiduidade}%</div>
-                    <div style="width: 100%; height: 3px; background: #333; border-radius: 2px;">
+                <div style="margin: 15px 0;">
+                    <div style="font-size: 10px; color: #888; margin-bottom: 5px;">ASSIDUIDADE: ${assiduidade}%</div>
+                    <div style="width: 100%; height: 4px; background: #333; border-radius: 2px;">
                         <div style="width: ${assiduidade}%; height: 100%; background: var(--success); box-shadow: 0 0 10px var(--success);"></div>
                     </div>
                 </div>
@@ -206,28 +197,27 @@
                     <div class="stat-badge">DOMINGO: ${c.domingoMes}</div>
                 </div>
                 
-                <div style="margin-top:15px; font-size: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="margin-top:20px; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="counter-group">
                         <button class="btn-math" onclick="adjustStat(${index}, 'atestados', -1)">-</button>
-                        <span style="flex:1; text-align:center;">🏥 ${c.atestados}</span>
+                        <span style="flex:1; text-align:center;">🏥 Atestados: <strong>${c.atestados}</strong></span>
                         <button class="btn-math" onclick="adjustStat(${index}, 'atestados', 1)">+</button>
                     </div>
                     <div class="counter-group">
                         <button class="btn-math" onclick="adjustStat(${index}, 'faltas', -1)">-</button>
-                        <span style="flex:1; text-align:center;">❌ ${c.faltas}</span>
+                        <span style="flex:1; text-align:center;">❌ Faltas: <strong>${c.faltas}</strong></span>
                         <button class="btn-math" onclick="adjustStat(${index}, 'faltas', 1)">+</button>
                     </div>
                 </div>
 
                 <div class="controls">
                     <button class="btn-small" style="grid-column: span 2; border-color: var(--success); color: var(--success);" onclick="addKpi(${index})">⭐ CREDITAR ENTREGA</button>
-                    <button class="btn-small" onclick="changeFolga(${index})">Folga</button>
-                    <button class="btn-small" onclick="changeDomingo(${index})">Domingo</button>
-                    <button class="btn-small" style="grid-column: span 2; color: var(--danger);" onclick="removeUser(${index})">REMOVER</button>
+                    <button class="btn-small" onclick="changeFolga(${index})">Trocar Folga</button>
+                    <button class="btn-small" onclick="changeDomingo(${index})">Trocar Domingo</button>
+                    <button class="btn-small" style="grid-column: span 2; border-color: var(--danger); color: var(--danger); margin-top: 5px;" onclick="removeUser(${index})">REMOVER COLABORADOR</button>
                 </div>
             </div>`;
 
-            // Alimenta Tabela de Impressão (Apenas Nome e Valor)
             tableBody.innerHTML += `
                 <tr>
                     <td>${c.nome.toUpperCase()}</td>
@@ -241,7 +231,7 @@
         document.getElementById('stats-display').innerText = `R$ ${totalFinal}`;
         document.getElementById('print-total-global').innerText = `TOTAL DA FOLHA: R$ ${totalFinal}`;
         document.getElementById('media-kpi').innerText = `${(somaPontualidade / (colaboradores.length || 1)).toFixed(0)}%`;
-        document.getElementById('print-date').innerText = `Gerado em: ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}`;
+        document.getElementById('print-date').innerText = `Data: ${new Date().toLocaleDateString()} | Projeto: SandxCDD`;
     }
 
     function adjustValue(index, amount) {
@@ -249,10 +239,10 @@
         renderSystem();
     }
 
-    function resetGlobal() { if(confirm("Zerar todos os pontos?")) { colaboradores.forEach(c => c.pontos = 0); renderSystem(); }}
+    function resetGlobal() { if(confirm("Zerar todos os bônus?")) { colaboradores.forEach(c => c.pontos = 0); renderSystem(); }}
 
     function addKpi(index) {
-        const pts = prompt("Adicionar quantos pontos?", "100");
+        const pts = prompt("Pontos de performance:", "100");
         if(pts && !isNaN(pts)) { colaboradores[index].pontos += parseInt(pts); renderSystem(); }
     }
 
@@ -271,17 +261,17 @@
     }
 
     function removeUser(index) {
-        if(confirm(`Remover ${colaboradores[index].nome}?`)) { colaboradores.splice(index, 1); renderSystem(); }
+        if(confirm(`Excluir ${colaboradores[index].nome}?`)) { colaboradores.splice(index, 1); renderSystem(); }
     }
 
     function changeFolga(index) {
-        const n = prompt("Nova Folga:", colaboradores[index].folgaFixa);
-        if(n) { colaboradores[index].folgaFixa = n.toUpperCase(); renderSystem(); }
+        const f = prompt("Nova Folga:", colaboradores[index].folgaFixa);
+        if(f) { colaboradores[index].folgaFixa = f.toUpperCase(); renderSystem(); }
     }
 
     function changeDomingo(index) {
-        const n = prompt("Novo Domingo:", colaboradores[index].domingoMes);
-        if(n) { colaboradores[index].domingoMes = n; renderSystem(); }
+        const d = prompt("Novo Domingo:", colaboradores[index].domingoMes);
+        if(d) { colaboradores[index].domingoMes = d; renderSystem(); }
     }
 
     renderSystem();
