@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>ELDIN I.A ERP | Advanced AI Command</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-filled/48/FFD700/security-configuration.png">
+    <style>
+        :root {
+            --platinum-black: #050505;
+            --deep-blue: #001F3F;
+            --golden-orange: #FF8C00;
+            --gold-glow: #FFD700;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 215, 0, 0.2);
+        }
+
+        body {
+            background: radial-gradient(circle at top, var(--deep-blue), var(--platinum-black));
+            color: #E0E0E0; font-family: 'Inter', sans-serif;
+            margin: 0; overflow-x: hidden; min-height: 100vh;
+        }
+
+        /* Efeito 3D de Camada Superior */
+        .master-container {
+            perspective: 1000px; padding: 40px;
+            display: grid; grid-template-columns: 300px 1fr; gap: 30px;
+        }
+
+        /* Card de Segurança Aladin */
+        .security-card {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 25px; padding: 25px;
+            transform: rotateY(5deg);
+            box-shadow: -15px 15px 30px rgba(0,0,0,0.5);
+            transition: 0.5s ease;
+        }
+        
+        .security-card:hover { transform: rotateY(0deg) scale(1.02); }
+
+        .ai-pulse {
+            width: 15px; height: 15px; background: var(--gold-glow);
+            border-radius: 50%; box-shadow: 0 0 20px var(--golden-orange);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* Lista de Colaboradores por CPF */
+        .user-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+        }
+
+        .user-node {
+            background: linear-gradient(145deg, #0a0a0a, #151515);
+            border-left: 5px solid var(--golden-orange);
+            padding: 20px; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .cpf-tag { font-family: monospace; color: var(--gold-glow); font-size: 12px; }
+
+        .btn-action {
+            background: linear-gradient(to right, var(--golden-orange), var(--gold-glow));
+            border: none; padding: 12px 25px; border-radius: 8px;
+            color: black; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        h1 { color: var(--gold-glow); text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+    </style>
+</head>
+<body>
+
+<div class="master-container">
+    <!-- Sidebar de Gestão ERP -->
+    <aside class="security-card">
+        <h1>ELDIN I.A.</h1>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px;">
+            <div class="ai-pulse"></div>
+            <span style="font-size: 12px; font-weight: bold; letter-spacing: 2px;">NÚCLEO ATIVO</span>
+        </div>
+        
+        <nav>
+            <p><strong>GERENCIAR UNIDADES</strong></p>
+            <div style="font-size: 13px; color: #888;">Empresa: Partner Holding</div>
+            <div style="font-size: 13px; color: #888;">Projeto: X-Partner</div>
+            <hr style="border: 0.5px solid #222; margin: 20px 0;">
+            <button class="btn-action" onclick="addUser()">+ CADASTRAR CPF</button>
+        </nav>
+    </aside>
+
+    <!-- Área de Performance em Escala -->
+    <main>
+        <div class="security-card" style="margin-bottom: 30px; transform: none;">
+            <h2>MÉTRICAS DE ENTREGA (KPI)</h2>
+            <div id="stats-display" style="font-size: 48px; font-weight: 900; color: var(--golden-orange);">
+                R$ 0,00
+            </div>
+            <p style="font-size: 12px; color: #555;">SISTEMA DE PAGAMENTO POR ENTREGA ATIVADO</p>
+        </div>
+
+        <div class="user-grid" id="node-container">
+            <!-- Usuários serão inseridos aqui via script -->
+        </div>
+    </main>
+</div>
+
+<script>
+    // Banco de Dados em Memória (Integrado ao Aladin I.A.)
+    let colaboradores = [
+        { nome: "Cristian Ribeiro", cpf: "342.***.***-54", status: "Estrategista" },
+        { nome: "Mikaele Nascimento", cpf: "040.***.***-02", status: "Operacional" }
+    ];
+
+    function renderSystem() {
+        const container = document.getElementById('node-container');
+        container.innerHTML = colaboradores.map((c, index) => `
+            <div class="user-node">
+                <div>
+                    <div style="font-weight: bold;">${c.nome.toUpperCase()}</div>
+                    <div class="cpf-tag">ID: ${c.cpf}</div>
+                </div>
+                <button onclick="removeUser(${index})" style="background:none; border:1px solid #444; color:#666; cursor:pointer; border-radius:4px;">REMOVER</button>
+            </div>
+        `).join('');
+    }
+
+    function addUser() {
+        const nome = prompt("Nome Completo:");
+        const cpf = prompt("CPF:");
+        if(nome && cpf) {
+            colaboradores.push({ nome, cpf, status: "Novo Ativo" });
+            renderSystem();
+        }
+    }
+
+    function removeUser(index) {
+        if(confirm("Deseja desconectar este nó do sistema?")) {
+            colaboradores.splice(index, 1);
+            renderSystem();
+        }
+    }
+
+    renderSystem();
+</script>
+</body>
+</html>
